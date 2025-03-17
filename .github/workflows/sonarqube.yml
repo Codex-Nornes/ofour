@@ -23,7 +23,7 @@ jobs:
     steps:
       - name: Get IP
         run: |
-          echo "IP_HOST=ip -4 addr show | awk '/inet / && !/127.0.0.1/ && !/docker/ {print $2}'"
+          echo "ip -4 addr show | awk '/inet / && !/127.0.0.1/ && !/docker/ {print $2}'"
           
 
       # - name: Checkout repository
