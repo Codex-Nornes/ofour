@@ -21,12 +21,11 @@ jobs:
         shell: bash
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Get IP
+        run: echo "ip_host=ip -4 addr show | awk '/inet / && !/127.0.0.1/ && !/docker/ {print $2}' | cut -d'/' -f1 >> "$GITHUB_ENV"
 
-      - name: run script to get ip
-        working-directory: ./.github/workflows
-        run: script_ip.sh
+      # - name: Checkout repository
+      #   uses: actions/checkout@v4
 
       # - name: Démarrer le container SonarQube server
       #   run: docker run --name sonarqube-custom -p 9000:9000 sonarqube:10.6-community
