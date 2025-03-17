@@ -8,33 +8,30 @@ on:
         description: 'Sonarqube'  # Description de l'input
         required: true  # Cet input est obligatoire
         default: 'latest'  # Valeur par défaut si l'utilisateur ne fournit rien
-
-
   push:
     branches:
       - sonarqube
 jobs:
+
   
   start_Sonarqube_server:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./.github/workflows
 
     steps:
-      - name: check ip
-        run: echo "ACTION_IP=ip -4 addr show | awk '/inet / && !/127.0.0.1/ && !/docker/ {print $2}'" >> "$GITHUB_ENV"
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: run script to get ip
+        run: script_ip.sh
 
       - name: Démarrer le container SonarQube server
         run: docker run --name sonarqube-custom -p 9000:9000 sonarqube:10.6-community
 
-
-  analysis:
-    runs-on: ubuntu-latest
-
-    steps:
       - name: Wait for SonarQube server is ready 
         run : sleep 90
-
-      - name: Checkout repository
-        uses: actions/checkout@v4
 
       - name: Official SonarQube Scan
 
@@ -42,9 +39,9 @@ jobs:
         # uses: SonarSource/sonarqube-scan-action@v1.1.0
         uses: SonarSource/sonarqube-scan-action@v5.0.0
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN_USER}}  # Needed to get PR information
+          GITHUB_TOKEN: ${{ secrets.TOKEN_USER }}  # Needed to get PR information
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}   # Generate a token on SonarQube, add it to the secrets of this repo with the name SONAR_TOKEN (Settings > Secrets > Actions > add new repository secret)
-          SONAR_HOST_URL: http://"$ACTION_IP":9000/ # add the URL of your instance to the secrets of this repo with the name SONAR_HOST_URL (Settings > Secrets > Actions > add new repository secret)
+          SONAR_HOST_URL: $IP_HOST_SERVER  # add the URL of your instance to the secrets of this repo with the name SONAR_HOST_URL (Settings > Secrets > Actions > add new repository secret)
         with:
           # Additional arguments for the sonarcloud scanner
           args:
