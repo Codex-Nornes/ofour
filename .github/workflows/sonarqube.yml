@@ -24,9 +24,14 @@ jobs:
     outputs:    
       output1: ${{ steps.step1.outputs.test }}
 
-    
+      
     steps:
       
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - id: step1
+        run: echo "IP_HOST_SERVER=ip -4 addr show | awk '/inet / && !/127.0.0.1/ && !/docker/ {print $2}'" >> "$GITHUB_OUTPUT"
 
       # - name: get_ip
       #   id: ip-server
@@ -38,12 +43,6 @@ jobs:
       #   env:
       #       IP_HOST_SERVER: ${{steps.ip-server.outputs.IP_HOST_SERVER}}
       #   run: echo "IP=http://$IP_HOST_SERVER/" >> "$GITHUB_ENV"
-        
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - id: step1
-        run: ./script_ip >> "$GITHUB_OUPUT"
 
       - name: Démarrer le container SonarQube server
         run: docker run --name sonarqube-custom -p 9000:9000 sonarqube:10.6-community
@@ -63,7 +62,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN_USER }}  # Needed to get PR information
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}   # Generate a token on SonarQube, add it to the secrets of this repo with the name SONAR_TOKEN (Settings > Secrets > Actions > add new repository secret)
-          SONAR_HOST_URL: ${{needs.start_Sonarqube_server.outputs.output1}} # add the URL of your instance to the secrets of this repo with the name SONAR_HOST_URL (Settings > Secrets > Actions > add new repository secret)
+          SONAR_HOST_URL: http://${{needs.start_Sonarqube_server.outputs.output1}}:9000 # add the URL of your instance to the secrets of this repo with the name SONAR_HOST_URL (Settings > Secrets > Actions > add new repository secret)
         with:
           # Additional arguments for the sonarcloud scanner
           args:
