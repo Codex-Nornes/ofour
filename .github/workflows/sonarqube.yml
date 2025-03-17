@@ -13,8 +13,30 @@ on:
   push:
     branches:
       - sonarqube
-
 jobs:
+  install-docker:
+    needs: analysis
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Installer Docker
+        run: |
+          sudo apt-get install ca-certificates curl
+          sudo install -m 0755 -d /etc/apt/keyrings
+          sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+          sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+          # Add the repository to Apt sources:
+          echo \
+            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+            $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+            sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+          sudo apt-get update
+          sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+      - name: Démarrer le container SonarQube server
+        run: docker run --name sonarqube - 9000:9000 sonarqube:10.6-community
+
   analysis:
     runs-on: ubuntu-latest
     steps:
@@ -22,7 +44,7 @@ jobs:
 
         # You can pin the exact commit or the version.
         # uses: SonarSource/sonarqube-scan-action@v1.1.0
-        uses: SonarSource/sonarqube-scan-action@7295e71c9583053f5bf40e9d4068a0c974603ec8
+        uses: SonarSource/sonarqube-scan-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN_USER}}  # Needed to get PR information
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}   # Generate a token on SonarQube, add it to the secrets of this repo with the name SONAR_TOKEN (Settings > Secrets > Actions > add new repository secret)
