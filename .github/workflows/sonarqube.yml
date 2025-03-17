@@ -19,7 +19,7 @@ jobs:
 
     steps:
     - name: check ip
-      run: ip -a addr show | grep inet
+      run: ip -4 addr show | awk '/inet / && !/127.0.0.1/ && !/docker/ {print $2}'
   
   start_Sonarqube_server:
     needs: install_docker
