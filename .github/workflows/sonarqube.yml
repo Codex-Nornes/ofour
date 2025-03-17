@@ -16,7 +16,6 @@ on:
 jobs:
   
   start_Sonarqube_server:
-    needs: install_docker
     runs-on: ubuntu-latest
 
     steps:
