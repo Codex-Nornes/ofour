@@ -19,13 +19,13 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./.github/workflows
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: run script to get ip
+        working-directory: ./.github/workflows
         run: script_ip.sh
 
       # - name: Démarrer le container SonarQube server
