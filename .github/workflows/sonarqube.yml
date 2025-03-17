@@ -4,14 +4,11 @@ run-name: ${{ github.actor }}
 on:
   workflow_dispatch:  # Déclenchement manuel via GitHub avec des inputs
     inputs:
-      branch_name:
+      version:
         description: 'Sonarqube'  # Description de l'input
         required: true  # Cet input est obligatoire
-        default: 'main'  # Valeur par défaut si l'utilisateur ne fournit rien
-      environment:
-        description: 
-        required: true
-        default: 'staging'  # Valeur par défaut
+        default: 'latest'  # Valeur par défaut si l'utilisateur ne fournit rien
+
 
   push:
     branches:
