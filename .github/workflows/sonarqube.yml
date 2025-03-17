@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: run script to get ip
-        run: ./script_ip.sh
+        run: script_ip.sh
 
       - name: Démarrer le container SonarQube server
         run: docker run --name sonarqube-custom -p 9000:9000 sonarqube:10.6-community
