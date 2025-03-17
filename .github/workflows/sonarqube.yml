@@ -22,7 +22,9 @@ jobs:
 
     steps:
       - name: Get IP
-        run: echo "ip_host=ip -4 addr show | awk '/inet / && !/127.0.0.1/ && !/docker/ {print $2}'" >> "$GITHUB_ENV"
+        run: |
+          echo "IP_HOST=ip -4 addr show | awk '/inet / && !/127.0.0.1/ && !/docker/ {print $2}'"
+          
 
       # - name: Checkout repository
       #   uses: actions/checkout@v4
