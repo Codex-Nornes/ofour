@@ -15,7 +15,6 @@ on:
       - sonarqube
 jobs:
   install-docker:
-    needs: analysis
     runs-on: ubuntu-latest
     steps:
 
@@ -38,6 +37,7 @@ jobs:
         run: docker run --name sonarqube - 9000:9000 sonarqube:10.6-community
 
   analysis:
+    needs: install-docker
     runs-on: ubuntu-latest
     steps:
       - name: Analyze with SonarQube
