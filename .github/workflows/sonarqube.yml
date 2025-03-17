@@ -21,7 +21,9 @@ jobs:
     steps:
       - name: get_ip
         id: ip-server
-        run: echo "IP_HOST_SERVER=ip -4 addr show | awk '/inet / && !/127.0.0.1/ && !/docker/ {print $2}'" >> "$GITHUB_OUTPUT"
+        run: |
+          echo "IP_HOST_SERVER=ip -4 addr show | awk '/inet / && !/127.0.0.1/ && !/docker/ {print $2}'" >> "$GITHUB_OUTPUT"
+          echo $GITHUB_OUTPUT
       
       - name: shape address
         env:
