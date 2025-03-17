@@ -17,26 +17,20 @@ jobs:
 
   start_Sonarqube_server:
     runs-on: ubuntu-latest  
-
     outputs:    
       output1: ${{ steps.step1.outputs.test }}
-
-
     steps:
-
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - id: step1
         run: echo "IP_HOST_SERVER=ip -4 addr show | awk '/inet / && !/127.0.0.1/ && !/docker/ {print $2}'" >> "$GITHUB_OUTPUT"
-        
+
       - name: Démarrer le container SonarQube server
         run: docker run --name sonarqube-custom -p 9000:9000 sonarqube:10.6-community
 
-
   start_Sonar-scan:
     runs-on: ubuntu-latest
-    needs: start_Sonarqube_server
     steps:
       - name: Wait for SonarQube server is ready 
         run : sleep 90
