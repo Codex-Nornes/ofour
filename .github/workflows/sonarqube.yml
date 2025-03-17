@@ -41,11 +41,11 @@ jobs:
     steps:
 
       - name: Wait for SonarQube server is ready 
-        run : sleep 60
+        run : sleep 120
 
       - name: Checkout repository
         uses: actions/checkout@v4
-        
+
       - name: Official SonarQube Scan
 
         # You can pin the exact commit or the version.
