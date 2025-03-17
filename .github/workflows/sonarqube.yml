@@ -26,14 +26,14 @@ jobs:
     steps:
       - name: Démarrer le container SonarQube server
         run: docker run --name sonarqube-custom -p 9000:9000 sonarqube:10.6-community
+      - name: server ready
+        run: echo "Server SonarQube is ready !"
 
   analysis:
     if: ${{ always () }}
     runs-on: ubuntu-latest
+    needs: start_Sonarqube_server
     steps:
-
-      - name: Wait for SonarQube server is ready 
-        run : sleep 100
 
       - name: Checkout repository
         uses: actions/checkout@v4
