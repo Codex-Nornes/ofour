@@ -42,6 +42,7 @@ jobs:
         run: docker run --name sonarqube-custom -p 9000:9000 sonarqube:10.6-community
 
   analysis:
+    if: ${{ always () }}
     needs: start_Sonarqube_server
     runs-on: ubuntu-latest
     steps:
