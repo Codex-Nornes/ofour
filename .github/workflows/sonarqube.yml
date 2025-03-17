@@ -41,6 +41,14 @@ jobs:
       - name: Démarrer le container SonarQube server
         run: docker run --name sonarqube-custom -p 9000:9000 sonarqube:10.6-community
 
+      - name: Wait for SonarQube
+        run: |
+          until curl -s http://localhost:9003/api/system/status | grep -q "OK"; do
+            echo "Waiting for SonarQube..."
+            sleep 5
+          done
+          echo "SonarQube is ready!"
+
   analysis:
     if: ${{ always () }}
     needs: start_Sonarqube_server
