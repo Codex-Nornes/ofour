@@ -2,12 +2,13 @@ name: Sonarqube
 run-name: ${{ github.actor }}
 
 on:
+  
   workflow_dispatch:  # Déclenchement manuel via GitHub avec des inputs
     inputs:
       version:
-        description: 'Sonarqube'  # Description de l'input
-        required: true  # Cet input est obligatoire
-        default: 'latest'  # Valeur par défaut si l'utilisateur ne fournit rien
+        description: 'Sonarqube' 
+        required: true  
+        default: 'latest'  
   push:
     branches:
       - sonarqube
@@ -15,16 +16,8 @@ on:
 jobs:
 
   start_Sonarqube_server:
-    runs-on: ubuntu-latest  
-    outputs:    
-      IP_HOST_SERVER: ${{ steps.step1.outputs.get_ip }}
+    runs-on: self-hosted
     steps:
-      - id: step1
-        run: echo "get_ip=ip -4 addr show | awk '/inet / && !/127.0.0.1/ && !/docker/ {print $2}'" >> "$GITHUB_OUTPUT"
-      
-      - name: show IP
-        run: echo ${{ steps.step1.outputs.get_ip }}
-
       - name: Démarrer le container SonarQube server
         run: docker run --name sonarqube-custom -p 9000:9000 sonarqube:10.6-community
 
@@ -46,7 +39,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN_USER }}  # Needed to get PR information
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}   # Generate a token on SonarQube, add it to the secrets of this repo with the name SONAR_TOKEN (Settings > Secrets > Actions > add new repository secret)
-          SONAR_HOST_URL: "http://${{needs.start_Sonarqube_server.outputs.IP_HOST_SERVER}}:9000" # add the URL of your instance to the secrets of this repo with the name SONAR_HOST_URL (Settings > Secrets > Actions > add new repository secret)
+          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }} # add the URL of your instance to the secrets of this repo with the name SONAR_HOST_URL (Settings > Secrets > Actions > add new repository secret)
         with:
           # Additional arguments for the sonarcloud scanner
           args:
