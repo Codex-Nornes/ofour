@@ -22,7 +22,7 @@ jobs:
         run: docker run --name sonarqube-custom -p 9000:9000 sonarqube:10.6-community
 
   start_Sonar-scan:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - name: Wait for SonarQube server is ready 
         run : sleep 90
